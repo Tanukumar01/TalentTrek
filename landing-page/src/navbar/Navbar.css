@@ -14,6 +14,14 @@
     gap: 8px;
   }
   
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+  }
+  
   .navbar-logo {
     font-size: 1.8rem;
     color: #2563eb;
@@ -52,6 +60,8 @@
     cursor: pointer;
     font-weight: 500;
     transition: 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
   }
   
   .sign-in:hover {
@@ -68,9 +78,157 @@
     cursor: pointer;
     font-weight: 500;
     transition: 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
   }
   
   .post-job:hover {
     background-color: #2563eb;
     color: white;
+  }
+
+  /* User Menu Styles */
+  .user-menu {
+    position: relative;
+  }
+
+  .user-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #4b5563;
+  }
+
+  .user-button:hover {
+    background-color: #f3f4f6;
+  }
+
+  .user-icon {
+    font-size: 1.2rem;
+    color: #2563eb;
+  }
+
+  .user-name {
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  .dropdown-icon {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+  }
+
+  .user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    min-width: 200px;
+    z-index: 1000;
+    overflow: hidden;
+  }
+
+  .dropdown-header {
+    padding: 16px;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .user-email {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin: 0 0 4px 0;
+  }
+
+  .user-role {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin: 0;
+    text-transform: capitalize;
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    background-color: #e5e7eb;
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .dropdown-item:hover {
+    background-color: #f3f4f6;
+  }
+
+  .dropdown-item.logout {
+    color: #dc2626;
+  }
+
+  .dropdown-item.logout:hover {
+    background-color: #fef2f2;
+  }
+
+  /* Loading styles */
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    gap: 16px;
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e5e7eb;
+    border-top: 4px solid #2563eb;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 1rem;
+    }
+    
+    .navbar-center {
+      display: none;
+    }
+    
+    .user-name {
+      display: none;
+    }
+    
+    .user-dropdown {
+      right: -10px;
+    }
   }
