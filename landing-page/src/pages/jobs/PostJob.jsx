@@ -23,22 +23,35 @@ const PostJob = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Save job to localStorage (for demo)
-    const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-    const newJob = {
-      ...form,
-      id: Date.now(),
-      postedBy: user?.email,
-      postedAt: new Date().toISOString(),
-    };
-    jobs.unshift(newJob);
-    localStorage.setItem('jobs', JSON.stringify(jobs));
-    setLoading(false);
-    toast.success('Job posted successfully!');
-    navigate('/dashboard');
+    
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/jobs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(form)
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        toast.success('Job posted successfully!');
+        navigate('/dashboard');
+      } else {
+        toast.error(data.message || 'Failed to post job');
+      }
+    } catch (error) {
+      console.error('Error posting job:', error);
+      toast.error('Failed to post job. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Only allow recruiters

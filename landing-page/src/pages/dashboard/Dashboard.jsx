@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
-import { IoPersonOutline, IoBriefcaseOutline, IoDocumentTextOutline, IoStatsChartOutline, IoNotificationsOutline, IoSettingsOutline } from 'react-icons/io5';
+import { IoPersonOutline, IoBriefcaseOutline, IoDocumentTextOutline, IoStatsChartOutline, IoNotificationsOutline, IoSettingsOutline, IoStarOutline } from 'react-icons/io5';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -58,11 +58,11 @@ const Dashboard = () => {
       color: '#48bb78'
     },
     {
-      title: 'Job Alerts',
-      description: 'Manage your job search preferences',
-      icon: <IoNotificationsOutline />,
-      link: '#',
-      color: '#ed8936'
+      title: 'Job Recommendations',
+      description: 'Get personalized job matches based on your resume',
+      icon: <IoStarOutline />,
+      link: '/job-recommendations',
+      color: '#f59e0b'
     },
     {
       title: 'Account Settings',
@@ -152,11 +152,11 @@ const Dashboard = () => {
             </div>
             <div className="activity-item">
               <div className="activity-icon">
-                <IoStatsChartOutline />
+                <IoStarOutline />
               </div>
               <div className="activity-content">
-                <h4>Profile Viewed</h4>
-                <p>Your profile was viewed by 3 employers</p>
+                <h4>New Job Recommendations</h4>
+                <p>5 new jobs matched your skills</p>
                 <span className="activity-time">2 days ago</span>
               </div>
             </div>
