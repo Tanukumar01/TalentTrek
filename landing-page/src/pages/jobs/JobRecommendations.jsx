@@ -50,8 +50,16 @@ const JobRecommendations = () => {
       return;
     }
 
-    // Validate file size (5MB limit)
-    if (file.size > 5 * 1024 * 1024) {
+    // Validate file size (minimum 100KB, maximum 5MB)
+    const minSize = 100 * 1024; // 100KB in bytes
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    
+    if (file.size < minSize) {
+      toast.error('File size must be at least 100KB');
+      return;
+    }
+    
+    if (file.size > maxSize) {
       toast.error('File size must be less than 5MB');
       return;
     }
@@ -133,7 +141,7 @@ const JobRecommendations = () => {
             </label>
             <div className="upload-info">
               <p>Supported formats: PDF, DOC, DOCX</p>
-              <p>Maximum file size: 5MB</p>
+              <p>File size: 100KB - 5MB</p>
             </div>
           </div>
         </div>

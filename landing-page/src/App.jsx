@@ -11,6 +11,8 @@ import ProtectedRoute from './components/auth/ProtectedRoute'
 import Profile from './pages/profile/Profile'
 import Dashboard from './pages/dashboard/Dashboard'
 import PostJob from './pages/jobs/PostJob'
+import JobRecommendations from './pages/jobs/JobRecommendations'
+import CompaniesDashboard from './pages/dashboard/CompaniesDashboard'
 
 import './index.css'
 
@@ -63,6 +65,18 @@ const App = () => {
                     <PostJob />
                   </ProtectedRoute>
                 } 
+              />
+              <Route 
+                path="/job-recommendations" 
+                element={
+                  <ProtectedRoute>
+                    <JobRecommendations />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/companies" 
+                element={<CompaniesDashboard />} 
               />
             </Routes>
           </main>
