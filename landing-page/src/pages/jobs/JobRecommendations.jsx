@@ -19,7 +19,7 @@ const JobRecommendations = () => {
   const fetchRecommendations = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/job-recommendations', {
+      const response = await fetch('http://localhost:3000/api/job-recommendations', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -70,7 +70,7 @@ const JobRecommendations = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/upload-resume', {
+      const response = await fetch('http://localhost:3000/api/upload-resume', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
