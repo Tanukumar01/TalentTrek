@@ -39,6 +39,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /pdf|doc|docx/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -46,7 +49,7 @@ const upload = multer({
     if (mimetype && extname) {
       return cb(null, true);
     } else {
-      cb('Error: Only PDF, DOC, and DOCX files are allowed!');
+      cb(new Error('Only PDF, DOC, and DOCX files are allowed!'));
     }
   }
 });
@@ -143,6 +146,8 @@ app.post('/api/upload-resume', authenticateToken, upload.single('resume'), async
       return res.status(400).json({ success: false, message: 'No file uploaded' });
     }
 
+    console.log('File uploaded:', req.file.originalname, 'Size:', req.file.size, 'bytes');
+
     // Simple resume parsing (in a real app, you'd use a proper PDF parser)
     const parsedData = {
       skills: ['JavaScript', 'React', 'Node.js', 'MongoDB', 'Express'], // Mock data
@@ -174,8 +179,22 @@ app.post('/api/upload-resume', authenticateToken, upload.single('resume'), async
     });
   } catch (error) {
     console.error('Resume upload error:', error);
-    res.status(500).json({ success: false, message: 'Error uploading resume' });
+    res.status(500).json({ success: false, message: 'Error uploading resume: ' + error.message });
   }
+});
+
+// Error handling middleware for multer
+app.use((error, req, res, next) => {
+  if (error instanceof multer.MulterError) {
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ success: false, message: 'File too large. Maximum size is 5MB.' });
+    }
+    return res.status(400).json({ success: false, message: 'File upload error: ' + error.message });
+  }
+  if (error) {
+    return res.status(400).json({ success: false, message: error.message });
+  }
+  next();
 });
 
 // Post job route
