@@ -216,4 +216,20 @@
   .view-btn:hover {
     background-color: #1d4ed8;
   }
+  .clear-search-btn {
+    background-color: #fff;
+    color: #2563eb;
+    border: 2px solid #2563eb;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .clear-search-btn:hover {
+    background-color: #2563eb;
+    color: #fff;
+  }
   

@@ -1,0 +1,24 @@
+{
+  "name": "talenttrek---copy",
+  "version": "1.0.0",
+  "description": "A full-stack job platform with AI-powered job recommendations based on resume uploads.",
+  "main": "seed-jobs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:all": "concurrently \"npm run start --prefix backend\" \"npm run dev --prefix frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tanukumar01/TalentTrek.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tanukumar01/TalentTrek/issues"
+  },
+  "homepage": "https://github.com/Tanukumar01/TalentTrek#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}

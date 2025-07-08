@@ -79,6 +79,7 @@ const jobSchema = new mongoose.Schema({
   type: String,
   description: String,
   requirements: String,
+  companyWebsite: String,
   skills: [String],
   postedBy: String,
   postedAt: { type: Date, default: Date.now }
@@ -99,6 +100,15 @@ const resumeSchema = new mongoose.Schema({
   uploadedAt: { type: Date, default: Date.now }
 });
 const Resume = mongoose.model('Resume', resumeSchema);
+
+// Application schema
+const applicationSchema = new mongoose.Schema({
+  jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job' },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  appliedAt: { type: Date, default: Date.now },
+  status: { type: String, default: 'pending' }
+});
+const Application = mongoose.model('Application', applicationSchema);
 
 // Signup route
 app.post('/api/signup', async (req, res) => {
@@ -200,7 +210,7 @@ app.use((error, req, res, next) => {
 // Post job route
 app.post('/api/jobs', authenticateToken, async (req, res) => {
   try {
-    const { title, company, location, salary, type, description, requirements } = req.body;
+    const { title, company, location, salary, type, description, requirements, companyWebsite } = req.body;
     
     // Extract skills from requirements (simple keyword extraction)
     const skills = extractSkillsFromText(requirements + ' ' + description);
@@ -213,6 +223,7 @@ app.post('/api/jobs', authenticateToken, async (req, res) => {
       type,
       description,
       requirements,
+      companyWebsite,
       skills,
       postedBy: req.user.email
     });
@@ -270,6 +281,37 @@ app.get('/api/job-recommendations', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Job recommendations error:', error);
     res.status(500).json({ success: false, message: 'Error getting recommendations' });
+  }
+});
+
+// Get job details by ID
+app.get('/api/jobs/:id', async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id);
+    if (!job) return res.status(404).json({ success: false, message: 'Job not found' });
+    res.json({ success: true, job });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error fetching job' });
+  }
+});
+
+// Apply to a job
+app.post('/api/apply', authenticateToken, async (req, res) => {
+  try {
+    const { jobId } = req.body;
+    // Prevent duplicate applications
+    const existing = await Application.findOne({ jobId, userId: req.user.id });
+    if (existing) {
+      return res.status(400).json({ success: false, message: 'Already applied to this job.' });
+    }
+    const application = new Application({
+      jobId,
+      userId: req.user.id
+    });
+    await application.save();
+    res.json({ success: true, message: 'Application submitted!' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error applying to job' });
   }
 });
 

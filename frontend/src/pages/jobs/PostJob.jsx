@@ -16,6 +16,7 @@ const PostJob = () => {
     type: 'Full Time',
     description: '',
     requirements: '',
+    companyWebsite: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -91,6 +92,16 @@ const PostJob = () => {
               onChange={handleChange}
               required
               placeholder="Company name"
+            />
+          </div>
+          <div className="form-group">
+            <label>Company Website</label>
+            <input
+              type="url"
+              name="companyWebsite"
+              value={form.companyWebsite}
+              onChange={handleChange}
+              placeholder="https://company.com"
             />
           </div>
           <div className="form-group">
