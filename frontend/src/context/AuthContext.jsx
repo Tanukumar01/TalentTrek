@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { API_ENDPOINTS } from '../config/api';
 
 const AuthContext = createContext();
 
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await fetch('http://localhost:3000/api/login', {
+      const res = await fetch(API_ENDPOINTS.LOGIN, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -58,7 +59,7 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (name, email, password, role) => {
     try {
-      const res = await fetch('http://localhost:3000/api/signup', {
+      const res = await fetch(API_ENDPOINTS.SIGNUP, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, role }),

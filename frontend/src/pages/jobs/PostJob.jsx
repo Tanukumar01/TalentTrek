@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import './PostJob.css';
+import { API_ENDPOINTS } from '../../config/api';
 
 const PostJob = () => {
   const { user } = useAuth();
@@ -30,7 +31,7 @@ const PostJob = () => {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/jobs', {
+      const response = await fetch(API_ENDPOINTS.JOBS, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

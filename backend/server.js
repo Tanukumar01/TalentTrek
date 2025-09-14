@@ -105,8 +105,14 @@ const Resume = mongoose.model('Resume', resumeSchema);
 const applicationSchema = new mongoose.Schema({
   jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job' },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  applicantName: String,
+  applicantEmail: String,
+  coverLetter: String,
+  resumePath: String,
+  resumeFileName: String,
   appliedAt: { type: Date, default: Date.now },
-  status: { type: String, default: 'pending' }
+  status: { type: String, default: 'pending' },
+  stage: { type: String, default: 'Resume Screening' }
 });
 const Application = mongoose.model('Application', applicationSchema);
 
@@ -298,20 +304,54 @@ app.get('/api/jobs/:id', async (req, res) => {
 // Apply to a job
 app.post('/api/apply', authenticateToken, async (req, res) => {
   try {
-    const { jobId } = req.body;
+    const { jobId, name, email, message, resumePath, resumeFileName } = req.body;
+    
+    // Validate required fields
+    if (!jobId) {
+      return res.status(400).json({ success: false, message: 'Job ID is required' });
+    }
+    
     // Prevent duplicate applications
     const existing = await Application.findOne({ jobId, userId: req.user.id });
     if (existing) {
       return res.status(400).json({ success: false, message: 'Already applied to this job.' });
     }
+    
     const application = new Application({
       jobId,
-      userId: req.user.id
+      userId: req.user.id,
+      applicantName: name || '',
+      applicantEmail: email || '',
+      coverLetter: message || '',
+      resumePath: resumePath || '',
+      resumeFileName: resumeFileName || ''
     });
     await application.save();
     res.json({ success: true, message: 'Application submitted!' });
   } catch (error) {
+    console.error('Application error:', error);
     res.status(500).json({ success: false, message: 'Error applying to job' });
+  }
+});
+
+// Get jobs posted by the authenticated recruiter
+app.get('/api/my-jobs', authenticateToken, async (req, res) => {
+  try {
+    const jobs = await Job.find({ postedBy: req.user.email }).sort({ postedAt: -1 });
+    res.json({ success: true, jobs });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error fetching recruiter jobs' });
+  }
+});
+
+// Get applications for a specific job (with candidate info)
+app.get('/api/jobs/:jobId/applications', authenticateToken, async (req, res) => {
+  try {
+    const applications = await Application.find({ jobId: req.params.jobId })
+      .populate('userId', 'name email profile');
+    res.json({ success: true, applications });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error fetching applications' });
   }
 });
 

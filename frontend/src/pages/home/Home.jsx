@@ -6,6 +6,7 @@ import { FaArrowTrendUp } from "react-icons/fa6";
 import { IoMdPeople } from "react-icons/io";
 import { BiSolidShoppingBagAlt } from "react-icons/bi";
 import { Link } from 'react-router-dom';
+import { API_ENDPOINTS } from '../../config/api';
 
 const Home = () => {
   const [jobs, setJobs] = useState([]);
@@ -20,7 +21,7 @@ const Home = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/jobs');
+        const response = await fetch(API_ENDPOINTS.JOBS);
         const data = await response.json();
         if (data.success) {
           setJobs(data.jobs);
@@ -46,7 +47,7 @@ const Home = () => {
     setShowAll(true); // Show all matching jobs
     setSearchActive(false);
     try {
-      let url = 'http://localhost:3000/api/jobs';
+      let url = API_ENDPOINTS.JOBS;
       const params = [];
       if (searchKeyword) params.push(`keyword=${encodeURIComponent(searchKeyword)}`);
       if (searchLocation) params.push(`location=${encodeURIComponent(searchLocation)}`);

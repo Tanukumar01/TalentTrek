@@ -1,5 +1,8 @@
 // API Configuration
-export const API_BASE_URL = 'https://talenttrek-backend-89nq.onrender.com';
+// Use local server for development, remote server for production
+export const API_BASE_URL = import.meta.env.DEV 
+  ? 'http://localhost:5000' 
+  : 'https://talenttrek-backend-89nq.onrender.com';
 
 // API Endpoints
 export const API_ENDPOINTS = {
@@ -9,6 +12,8 @@ export const API_ENDPOINTS = {
   JOB_RECOMMENDATIONS: `${API_BASE_URL}/api/job-recommendations`,
   UPLOAD_RESUME: `${API_BASE_URL}/api/upload-resume`,
   SEED_JOBS: `${API_BASE_URL}/api/seed-jobs`,
+  APPLY: `${API_BASE_URL}/api/apply`,
+  MY_JOBS: `${API_BASE_URL}/api/my-jobs`,
 };
 
 export default API_BASE_URL; 

@@ -36,7 +36,7 @@ const Navbar = () => {
 
        
       <div className="navbar-center">
-        <a href="#">Find Jobs</a>
+        <Link to="/browse-jobs">Find Jobs</Link>
         <div
           className="navbar-companies-dropdown-wrapper"
           onMouseEnter={() => setShowCompanies(true)}
@@ -96,6 +96,10 @@ const Navbar = () => {
                 <Link to="/dashboard" className="dropdown-item">
                   <IoBriefcaseOutline />
                   Dashboard
+                </Link>
+                <Link to="/browse-jobs" className="dropdown-item">
+                  <IoBriefcaseOutline />
+                  Browse Jobs
                 </Link>
                 <Link to="/job-recommendations" className="dropdown-item">
                   <IoStarOutline />
