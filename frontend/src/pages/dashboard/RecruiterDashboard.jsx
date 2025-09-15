@@ -55,7 +55,7 @@ const RecruiterDashboard = () => {
       setError('');
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${API_BASE_URL}/api/jobs/${selectedJobId}/applications`, {
+        const res = await fetch(API_ENDPOINTS.JOB_APPLICATIONS(selectedJobId), {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();

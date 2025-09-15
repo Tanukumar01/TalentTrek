@@ -14,6 +14,8 @@ export const API_ENDPOINTS = {
   SEED_JOBS: `${API_BASE_URL}/api/seed-jobs`,
   APPLY: `${API_BASE_URL}/api/apply`,
   MY_JOBS: `${API_BASE_URL}/api/my-jobs`,
+  PROTECTED: `${API_BASE_URL}/api/protected`,
+  JOB_APPLICATIONS: (jobId) => `${API_BASE_URL}/api/jobs/${jobId}/applications`,
 };
 
 export default API_BASE_URL; 

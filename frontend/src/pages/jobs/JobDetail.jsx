@@ -137,7 +137,7 @@ const JobDetail = () => {
       if (resumeUploaded && resumeFile) {
         // Get the latest resume from user's profile
         try {
-          const userResponse = await fetch(`${API_BASE_URL}/api/protected`, {
+          const userResponse = await fetch(API_ENDPOINTS.PROTECTED, {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           const userData = await userResponse.json();
