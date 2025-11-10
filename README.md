@@ -1,25 +1,34 @@
-# TalentTrek - Job Recommendation System
+# TalentTrek - Modern Job Portal Platform
 
-A full-stack job platform with AI-powered job recommendations based on resume uploads.
+A full-stack job portal connecting talented professionals with amazing opportunities worldwide. Built with modern technologies and featuring a beautiful, responsive design.
 
-## Features
+## ✨ Features
 
-### 🎯 Job Recommendations
-- **Resume Upload**: Upload PDF, DOC, or DOCX resumes
-- **Skill Extraction**: Automatically extract skills from resume content
-- **Smart Matching**: AI-powered job matching based on skills and requirements
-- **Match Scoring**: Percentage-based match scores for each job recommendation
-- **Personalized Results**: Tailored job suggestions based on your profile
-
-### 👤 User Management
-- **Authentication**: Secure login/signup with JWT tokens
-- **Role-based Access**: Separate interfaces for job seekers and recruiters
+### 🔐 Authentication System
+- **Secure Login/Signup**: JWT-based authentication with modern UI
+- **Role-based Access**: Separate dashboards for job seekers and recruiters
 - **Profile Management**: Comprehensive user profiles with skills and experience
 
-### 💼 Job Management
-- **Job Posting**: Recruiters can post new job opportunities
-- **Job Browsing**: Browse all available jobs
-- **Skill-based Matching**: Jobs are tagged with required skills for better matching
+### 👥 For Job Seekers
+- **Modern Dashboard**: Clean, intuitive interface for job management
+- **Job Browsing**: Browse jobs with advanced search and filtering
+- **Company Exploration**: Discover top companies with detailed information
+- **Application Tracking**: Track job applications and status
+- **Profile Builder**: Create detailed professional profiles
+
+### 🏢 For Recruiters
+- **Recruiter Dashboard**: Comprehensive dashboard for hiring management
+- **Job Posting**: Post jobs with rich text descriptions
+- **Candidate Management**: View and manage job applications
+- **Analytics**: Track job performance and candidate metrics
+- **Company Branding**: Showcase company information and culture
+
+### 🎨 Modern UI/UX
+- **Tailwind CSS**: Beautiful, responsive design with modern styling
+- **Light Blue Theme**: Professional color scheme matching brand identity
+- **Mobile-First**: Fully responsive across all devices
+- **Interactive Elements**: Smooth animations and hover effects
+- **Google Fonts**: Professional typography with Nunito, Raleway, and Alan Sans
 
 ## Tech Stack
 
