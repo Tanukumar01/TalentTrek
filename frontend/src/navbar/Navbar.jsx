@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { IoBriefcaseOutline, IoPersonOutline, IoLogOutOutline, IoChevronDownOutline, IoStarOutline } from "react-icons/io5";
+import { 
+  IoBriefcaseOutline, 
+  IoPersonOutline, 
+  IoLogOutOutline, 
+  IoChevronDownOutline,
+  IoPeopleOutline,
+  IoStatsChartOutline,
+  IoAddOutline,
+  IoNotificationsOutline
+} from "react-icons/io5";
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ isSimplified = false }) => {
   const { user, logout, isAuthenticated } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showCompanies, setShowCompanies] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -15,17 +23,8 @@ const Navbar = () => {
     setShowDropdown(false);
   };
 
-  const companies = [
-    { name: 'Google', url: 'https://www.google.com' },
-    { name: 'Microsoft', url: 'https://www.microsoft.com' },
-    { name: 'Amazon', url: 'https://www.amazon.com' },
-    { name: 'Infosys', url: 'https://www.infosys.com' },
-    { name: 'Tata Consultancy Services', url: 'https://www.tcs.com' },
-    { name: 'Accenture', url: 'https://www.accenture.com' },
-  ];
-
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${isSimplified ? 'navbar-simplified' : ''}`}>
        
       <div className="navbar-left">
         <Link to="/" className="navbar-brand">
@@ -34,89 +33,95 @@ const Navbar = () => {
         </Link>
       </div>
 
-       
-      <div className="navbar-center">
-        <Link to="/browse-jobs">Find Jobs</Link>
-        <div
-          className="navbar-companies-dropdown-wrapper"
-          onMouseEnter={() => setShowCompanies(true)}
-          onMouseLeave={() => setShowCompanies(false)}
-          style={{ position: 'relative', display: 'inline-block' }}
-        >
-          <span
-            className="navbar-companies-link"
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/companies')}
-          >Companies</span>
-          {showCompanies && (
-            <div className="companies-dropdown" style={{ position: 'absolute', top: '100%', left: 0, background: 'white', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', borderRadius: '8px', zIndex: 10, minWidth: '200px', padding: '10px 0' }}>
-              {companies.map((company, idx) => (
-                <a
-                  key={company.name}
-                  href={company.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ display: 'block', padding: '8px 20px', color: '#333', textDecoration: 'none', fontWeight: 500 }}
-                  onClick={() => setShowCompanies(false)}
-                >
-                  {company.name}
-                </a>
-              ))}
-            </div>
+      {/* Conditionally render navbar center - hide for simplified layout */}
+      {!isSimplified && (
+        <div className="navbar-center">
+          {/* Show different navigation based on user role */}
+          {isAuthenticated && user?.role === 'recruiter' ? (
+            // Enhanced Recruiter Navigation
+            <>
+              <Link to="/dashboard" className="navbar-link-enhanced">
+                <IoBriefcaseOutline className="navbar-link-icon" />
+                Dashboard
+              </Link>
+              <Link to="/post-job" className="navbar-link-enhanced">
+                <IoAddOutline className="navbar-link-icon" />
+                Post Jobs
+              </Link>
+              <Link to="/candidates" className="navbar-link-enhanced">
+                <IoPeopleOutline className="navbar-link-icon" />
+                Candidates
+              </Link>
+              <Link to="/analytics" className="navbar-link-enhanced">
+                <IoStatsChartOutline className="navbar-link-icon" />
+                Analytics
+              </Link>
+            </>
+          ) : (
+            // Job Seeker Navigation (default)
+            <>
+              <Link to="/">Home</Link>
+              <Link to="/browse-jobs">Browse Jobs</Link>
+              <Link to="/companies">Companies</Link>
+              <a href="#">Career Resources</a>
+            </>
           )}
         </div>
-        <a href="#">Career Resources</a>
-        <a href="#" >Salary Guide</a>
-      </div>
+      )}
 
        
       <div className="navbar-right">
         {isAuthenticated ? (
-          <div className="user-menu">
-            <button 
-              className="user-button"
-              onClick={() => setShowDropdown(!showDropdown)}
-            >
-              <IoPersonOutline className="user-icon" />
-              <span className="user-name">{user?.name || 'User'}</span>
-              <IoChevronDownOutline className="dropdown-icon" />
-            </button>
-            
-            {showDropdown && (
-              <div className="user-dropdown">
-                <div className="dropdown-header">
-                  <p className="user-email">{user?.email}</p>
-                  <p className="user-role">{user?.role}</p>
-                </div>
-                <div className="dropdown-divider"></div>
-                <Link to="/profile" className="dropdown-item">
-                  <IoPersonOutline />
-                  Profile
-                </Link>
-                <Link to="/dashboard" className="dropdown-item">
-                  <IoBriefcaseOutline />
-                  Dashboard
-                </Link>
-                <Link to="/browse-jobs" className="dropdown-item">
-                  <IoBriefcaseOutline />
-                  Browse Jobs
-                </Link>
-                <Link to="/job-recommendations" className="dropdown-item">
-                  <IoStarOutline />
-                  Job Recommendations
-                </Link>
-                {user?.role === 'recruiter' && (
-                  <Link to="/post-job" className="dropdown-item">
-                    <IoBriefcaseOutline />
-                    Post a Job
-                  </Link>
-                )}
-                <button onClick={handleLogout} className="dropdown-item logout">
-                  <IoLogOutOutline />
-                  Sign Out
+          <div className="navbar-right-authenticated">
+            {/* Enhanced features for recruiters */}
+            {user?.role === 'recruiter' && (
+              <>
+                {/* Notifications */}
+                <button className="navbar-notification-btn">
+                  <IoNotificationsOutline className="notification-icon" />
+                  <span className="notification-badge">3</span>
                 </button>
-              </div>
+              </>
             )}
+            
+            <div className="user-menu">
+              <button 
+                className="user-button"
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                <IoPersonOutline className="user-icon" />
+                <span className="user-name">{user?.name || 'User'}</span>
+                <IoChevronDownOutline className="dropdown-icon" />
+              </button>
+              
+              {showDropdown && (
+                <div className="user-dropdown">
+                  <div className="dropdown-header">
+                    <p className="user-email">{user?.email}</p>
+                    <p className="user-role">{user?.role}</p>
+                  </div>
+                  <div className="dropdown-divider"></div>
+                  <Link to="/profile" className="dropdown-item">
+                    <IoPersonOutline />
+                    Profile
+                  </Link>
+                  <Link to="/dashboard" className="dropdown-item">
+                    <IoBriefcaseOutline />
+                    Dashboard
+                  </Link>
+                  {user?.role === 'recruiter' && (
+                    <Link to="/post-job" className="dropdown-item">
+                      <IoBriefcaseOutline />
+                      Post a Job
+                    </Link>
+                  )}
+                  <button onClick={handleLogout} className="dropdown-item logout">
+                    <IoLogOutOutline />
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <>

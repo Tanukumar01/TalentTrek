@@ -5,7 +5,7 @@
     padding: 1rem 2rem;
     background-color: #fff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    font-family: sans-serif;
+    font-family: 'Nunito', 'Raleway', 'Alan Sans', sans-serif;
   }
   
   .navbar-left {
@@ -230,5 +230,167 @@
     
     .user-dropdown {
       right: -10px;
+    }
+  }
+  
+  /* Enhanced Recruiter Navbar Styles */
+  .navbar-link-enhanced {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-link-enhanced:hover {
+    background-color: #f3f4f6;
+    color: #2563eb;
+  }
+
+  .navbar-link-icon {
+    font-size: 1rem;
+    color: #6b7280;
+    transition: color 0.3s ease;
+  }
+
+  .navbar-link-enhanced:hover .navbar-link-icon {
+    color: #2563eb;
+  }
+
+  .navbar-right-authenticated {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Search Bar Styles */
+  .navbar-search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    font-size: 1rem;
+    color: #9ca3af;
+    z-index: 1;
+  }
+
+  .navbar-search-input {
+    padding: 8px 12px 8px 36px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    width: 200px;
+    background-color: #f9fafb;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-search-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  .navbar-search-input::placeholder {
+    color: #9ca3af;
+  }
+
+  /* Post Job Button Styles */
+  .navbar-post-job-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #2563eb;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .navbar-post-job-btn:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+
+  .btn-icon {
+    font-size: 1rem;
+  }
+
+  /* Notification Button Styles */
+  .navbar-notification-btn {
+    position: relative;
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #6b7280;
+  }
+
+  .navbar-notification-btn:hover {
+    background-color: #f3f4f6;
+    color: #2563eb;
+  }
+
+  .notification-icon {
+    font-size: 1.2rem;
+  }
+
+  .notification-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: #ef4444;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1;
+  }
+
+  /* Simplified navbar for recruiter pages */
+  .navbar-simplified {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Enhanced Responsive Design */
+  @media (max-width: 1024px) {
+    .navbar-search-input {
+      width: 150px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .navbar-search-container {
+      display: none;
+    }
+    
+    .navbar-post-job-btn span {
+      display: none;
+    }
+    
+    .navbar-right-authenticated {
+      gap: 0.5rem;
     }
   }

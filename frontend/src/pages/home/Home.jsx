@@ -124,8 +124,8 @@ const Home = () => {
                   <div>
                     <h3>{job.title}</h3>
                     <p className="company">{job.company}</p>
-                    <p className="details">📍 {job.location} &nbsp;&nbsp;|&nbsp;&nbsp; {job.type}</p>
-                    <p className="salary">{job.salary}</p>
+                    <p className="details">📍 {job.location?.city || job.location}, {job.location?.country || ''} &nbsp;&nbsp;|&nbsp;&nbsp; {Array.isArray(job.type) ? job.type.join(', ') : job.type}</p>
+                    <p className="salary">{job.salary?.min && job.salary?.max ? `$${job.salary.min} - $${job.salary.max}` : job.salary}</p>
                   </div>
                 </div>
                 <Link to={`/jobs/${job._id}`} className="apply-link">Apply Now →</Link>
@@ -183,8 +183,8 @@ const Home = () => {
                     <div>
                       <h3>{job.title}</h3>
                       <p className="company">{job.company}</p>
-                      <p className="details">📍 {job.location} &nbsp;&nbsp;|&nbsp;&nbsp; {job.type}</p>
-                      <p className="salary">{job.salary}</p>
+                      <p className="details">📍 {job.location?.city || job.location}, {job.location?.country || ''} &nbsp;&nbsp;|&nbsp;&nbsp; {Array.isArray(job.type) ? job.type.join(', ') : job.type}</p>
+                      <p className="salary">{job.salary?.min && job.salary?.max ? `$${job.salary.min} - $${job.salary.max}` : job.salary}</p>
                     </div>
                   </div>
                   <Link to={`/jobs/${job._id}`} className="apply-link">Apply Now →</Link>
