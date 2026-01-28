@@ -432,6 +432,10 @@ const BrowseJobs = () => {
             }}
           />
         </div>
+        <div>
+          // addding slider for selection range of salary
+          
+        </div>
         <div style={{ minWidth: '150px' }}>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#374151' }}>
             Job Type

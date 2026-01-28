@@ -1,7 +1,7 @@
 const express = require('express');
 const { User, Resume } = require('../models');
 const authenticateToken = require('../middleware/auth');
-const { resumeUpload } = require('../config/multer');
+const { resumeUpload } = require('../config/cloudinary');
 const { calculateMatchScore } = require('../utils/helpers');
 const router = express.Router();
 

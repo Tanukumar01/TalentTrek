@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { 
-  IoDocumentTextOutline, 
-  IoBookmarkOutline, 
-  IoChatbubbleOutline, 
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  IoDocumentTextOutline,
+  IoBookmarkOutline,
+  IoChatbubbleOutline,
   IoCalendarOutline,
   IoTrendingUpOutline,
   IoSearchOutline,
@@ -223,7 +223,7 @@ const Dashboard = () => {
 
   // Function to render content based on active tab
   const renderContent = () => {
-    switch(activeTab) {
+    switch (activeTab) {
       case 'dashboard':
         return (
           <>
@@ -270,7 +270,7 @@ const Dashboard = () => {
                     View All
                   </button>
                 </div>
-                
+
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gray-50">
@@ -349,7 +349,7 @@ const Dashboard = () => {
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <select 
+                  <select
                     className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
@@ -360,7 +360,7 @@ const Dashboard = () => {
                     <option>Under Review</option>
                     <option>Rejected</option>
                   </select>
-                  <select 
+                  <select
                     className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
                     value={typeFilter}
                     onChange={(e) => setTypeFilter(e.target.value)}
@@ -372,7 +372,7 @@ const Dashboard = () => {
                     <option>Contract</option>
                   </select>
                   {(statusFilter !== 'All Status' || typeFilter !== 'All Types') && (
-                    <button 
+                    <button
                       onClick={() => {
                         setStatusFilter('All Status');
                         setTypeFilter('All Types');
@@ -384,7 +384,7 @@ const Dashboard = () => {
                   )}
                 </div>
               </div>
-              
+
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-50">
@@ -448,7 +448,7 @@ const Dashboard = () => {
                             <IoDocumentTextOutline className="text-4xl text-gray-300 mb-4" />
                             <h3 className="text-lg font-medium text-gray-900 mb-2">No Applications Yet</h3>
                             <p className="text-gray-500 mb-4">You haven't applied to any jobs yet. Start exploring opportunities!</p>
-                            <button 
+                            <button
                               onClick={() => navigate('/jobs')}
                               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                             >
@@ -475,14 +475,14 @@ const Dashboard = () => {
                   Saved Jobs
                 </h2>
                 <div className="flex gap-2">
-                  <input 
-                    type="text" 
-                    placeholder="Search saved jobs..." 
+                  <input
+                    type="text"
+                    placeholder="Search saved jobs..."
                     className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-64"
                   />
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
                   { id: 1, title: 'Senior React Developer', company: 'Tech Innovations', location: 'San Francisco, CA', salary: '$120k - $150k', saved: '2 days ago' },
@@ -538,43 +538,17 @@ const Dashboard = () => {
                   </select>
                 </div>
               </div>
-              
-              <div className="space-y-4">
-                {[
-                  { id: 1, from: 'Sarah Johnson - TechCorp Inc.', subject: 'Interview Invitation for Senior Frontend Developer', preview: 'Hi Mayank, We were impressed with your application and would like to invite you for an interview...', time: '2 hours ago', unread: true },
-                  { id: 2, from: 'Mike Chen - Creative Agency', subject: 'Thank you for your application', preview: 'Thank you for applying to the Product Designer position. We have received your application...', time: '1 day ago', unread: true },
-                  { id: 3, from: 'Lisa Wang - Innovation Labs', subject: 'Next steps in your application', preview: 'Congratulations! You have been shortlisted for the Full Stack Engineer position...', time: '2 days ago', unread: false },
-                  { id: 4, from: 'David Brown - DataCorp', subject: 'Application Status Update', preview: 'We wanted to update you on the status of your application for the Backend Developer role...', time: '3 days ago', unread: false }
-                ].map((message) => (
-                  <div key={message.id} className={`border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow cursor-pointer ${message.unread ? 'bg-blue-50 border-blue-200' : ''}`}>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className={`font-medium ${message.unread ? 'text-gray-900' : 'text-gray-700'}`}>
-                            {message.from}
-                          </h3>
-                          {message.unread && (
-                            <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
-                          )}
-                        </div>
-                        <h4 className={`font-semibold mb-2 ${message.unread ? 'text-gray-900' : 'text-gray-700'}`}>
-                          {message.subject}
-                        </h4>
-                        <p className="text-gray-600 text-sm line-clamp-2">{message.preview}</p>
-                        <p className="text-xs text-gray-400 mt-2">{message.time}</p>
-                      </div>
-                      <button className="text-gray-400 hover:text-gray-600">
-                        <IoEllipsisVerticalOutline />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+
+              <div className="flex flex-col items-center justify-center py-12 text-center text-gray-500">
+                <IoChatbubbleOutline className="text-4xl text-gray-300 mb-3" />
+                <p className="text-lg font-medium text-gray-700">No messages yet</p>
+                <p className="text-sm text-gray-500 mt-1">Messages from recruiters and companies will appear here.</p>
               </div>
             </div>
           </div>
         );
 
-      case 'schedule':
+      case 'schedule': {
         const upcomingInterviews = [
           { id: 1, title: 'Technical Interview - TechCorp Inc.', type: 'Video Call', date: 'Nov 15, 2024', time: '2:00 PM - 3:00 PM', status: 'confirmed', color: 'blue' },
           { id: 2, title: 'HR Round - Creative Agency', type: 'Phone Call', date: 'Nov 16, 2024', time: '10:00 AM - 10:30 AM', status: 'confirmed', color: 'green' },
@@ -614,7 +588,7 @@ const Dashboard = () => {
                       </select>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     {upcomingInterviews.map((event) => (
                       <div key={event.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
@@ -630,11 +604,10 @@ const Dashboard = () => {
                                   {event.date}
                                 </span>
                                 <span className="text-sm text-gray-500">{event.time}</span>
-                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                  event.status === 'confirmed' ? 'bg-green-100 text-green-800' :
+                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${event.status === 'confirmed' ? 'bg-green-100 text-green-800' :
                                   event.status === 'pending' ? 'bg-orange-100 text-orange-800' :
-                                  'bg-purple-100 text-purple-800'
-                                }`}>
+                                    'bg-purple-100 text-purple-800'
+                                  }`}>
                                   {event.status}
                                 </span>
                               </div>
@@ -652,6 +625,7 @@ const Dashboard = () => {
             </div>
           </div>
         );
+      }
 
       default:
         return null;
@@ -712,13 +686,13 @@ const Dashboard = () => {
               </p>
             </div>
             <div className="profile-menu relative">
-              <button 
+              <button
                 onClick={() => setShowProfileDropdown(!showProfileDropdown)}
                 className="p-1 hover:bg-gray-100 rounded-full transition-colors"
               >
                 <IoEllipsisVerticalOutline />
               </button>
-              
+
               {/* Profile Dropdown */}
               {showProfileDropdown && (
                 <div className="absolute bottom-full right-0 mb-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">

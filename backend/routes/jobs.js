@@ -1,7 +1,7 @@
 const express = require('express');
 const { Job, Application } = require('../models');
 const authenticateToken = require('../middleware/auth');
-const { logoUpload } = require('../config/multer');
+const { logoUpload } = require('../config/cloudinary');
 const { extractSkillsFromText, calculateMatchScore } = require('../utils/helpers');
 const { seedJobs } = require('../utils/seedData');
 const router = express.Router();
@@ -27,38 +27,94 @@ router.post('/upload-logo', authenticateToken, logoUpload.single('logo'), async 
   }
 });
 
-// Post job route (with optional logo support)
-router.post('/', authenticateToken, logoUpload.single('logo'), async (req, res) => {
+// Post job route - handles both JSON and form-data with logo
+router.post('/', authenticateToken, (req, res, next) => {
+  // Only apply multer if content-type is multipart/form-data
+  const contentType = req.headers['content-type'] || '';
+  if (contentType.includes('multipart/form-data')) {
+    logoUpload.single('logo')(req, res, next);
+  } else {
+    next();
+  }
+}, async (req, res) => {
   try {
+    console.log(' Received job posting request');
+    console.log('Content-Type:', req.headers['content-type']);
+    console.log('Body:', JSON.stringify(req.body, null, 2));
+    
     const { 
       title, 
       company, 
       description, 
       requirements, 
-      companyWebsite
+      companyWebsite,
+      skills: providedSkills,
+      location: bodyLocation,
+      salary: bodySalary,
+      type: bodyType,
+      experienceLevel: bodyExperienceLevel,
+      category: bodyCategory
     } = req.body;
     
-    // Parse JSON strings for nested objects and arrays
+    // Validate required fields
+    if (!title || !company || !description) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Missing required fields: title, company, and description are required' 
+      });
+    }
+    
+    // Handle both JSON body and form-data
     let location, salary, type, experienceLevel, category;
     
     try {
-      location = req.body.location ? JSON.parse(req.body.location) : { country: 'India', city: 'Bangalore' };
-      salary = req.body.salary ? JSON.parse(req.body.salary) : { min: '', max: '' };
-      type = req.body.type ? JSON.parse(req.body.type) : ['Full Time'];
-      experienceLevel = req.body.experienceLevel ? JSON.parse(req.body.experienceLevel) : ['Freshers'];
-      category = req.body.category ? JSON.parse(req.body.category) : ['Development'];
+      // If location is already an object (JSON body), use it directly
+      // If it's a string (form-data), parse it
+      location = typeof bodyLocation === 'string' 
+        ? JSON.parse(bodyLocation) 
+        : bodyLocation || { country: 'India', city: 'Bangalore' };
+      
+      salary = typeof bodySalary === 'string'
+        ? JSON.parse(bodySalary)
+        : bodySalary || { min: '', max: '' };
+      
+      type = typeof bodyType === 'string'
+        ? JSON.parse(bodyType)
+        : bodyType || ['Full Time'];
+      
+      experienceLevel = typeof bodyExperienceLevel === 'string'
+        ? JSON.parse(bodyExperienceLevel)
+        : bodyExperienceLevel || ['Freshers'];
+      
+      category = typeof bodyCategory === 'string'
+        ? JSON.parse(bodyCategory)
+        : bodyCategory || ['Development'];
     } catch (parseError) {
-      console.error('JSON parsing error:', parseError);
-      return res.status(400).json({ success: false, message: 'Invalid data format' });
+      console.error('❌ JSON parsing error:', parseError);
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Invalid data format: ' + parseError.message 
+      });
     }
     
-    // Extract skills from requirements and description (simple keyword extraction)
-    const skills = extractSkillsFromText((requirements || '') + ' ' + (description || ''));
+    // Use provided skills or extract from requirements and description
+    let skills;
+    if (providedSkills && Array.isArray(providedSkills)) {
+      skills = providedSkills;
+    } else if (typeof providedSkills === 'string') {
+      try {
+        skills = JSON.parse(providedSkills);
+      } catch {
+        skills = extractSkillsFromText((requirements || '') + ' ' + (description || ''));
+      }
+    } else {
+      skills = extractSkillsFromText((requirements || '') + ' ' + (description || ''));
+    }
     
-    // Create job object with new structure
+    // Create job object
     const job = new Job({
-      title: title || '',
-      company: company || '',
+      title,
+      company,
       location: {
         country: location?.country || 'India',
         city: location?.city || 'Bangalore'
@@ -70,18 +126,19 @@ router.post('/', authenticateToken, logoUpload.single('logo'), async (req, res) 
       type: Array.isArray(type) ? type : [type || 'Full Time'],
       experienceLevel: Array.isArray(experienceLevel) ? experienceLevel : [experienceLevel || 'Freshers'],
       category: Array.isArray(category) ? category : [category || 'Development'],
-      description: description || '',
+      description,
       requirements: requirements || '',
       companyWebsite: companyWebsite || '',
-      logo: req.file ? req.file.path : null, // Use uploaded file path
+      logo: req.file ? req.file.path : null,
       skills,
       postedBy: req.user.email
     });
     
     await job.save();
-    res.json({ success: true, message: 'Job posted successfully', job });
+    console.log('✅ Job posted successfully:', job.title);
+    res.status(201).json({ success: true, message: 'Job posted successfully', job });
   } catch (error) {
-    console.error('Job posting error:', error);
+    console.error('❌ Job posting error:', error);
     res.status(500).json({ success: false, message: 'Error posting job: ' + error.message });
   }
 });
@@ -118,6 +175,118 @@ router.get('/:id', async (req, res) => {
   } catch (error) {
     console.error('Error fetching job:', error);
     res.status(500).json({ success: false, message: 'Error fetching job: ' + error.message });
+  }
+});
+
+// Update job by ID (recruiter only - must be job owner)
+router.put('/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log('Updating job with ID:', id);
+    
+    // Check if ID is a valid MongoDB ObjectId format
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ success: false, message: 'Invalid job ID format' });
+    }
+    
+    // Find the job first
+    const job = await Job.findById(id);
+    if (!job) {
+      return res.status(404).json({ success: false, message: 'Job not found' });
+    }
+    
+    // Check if the user is the owner of the job
+    if (job.postedBy !== req.user.email) {
+      return res.status(403).json({ 
+        success: false, 
+        message: 'Access denied. You can only update jobs you posted.' 
+      });
+    }
+    
+    const { 
+      title, 
+      company, 
+      description, 
+      requirements, 
+      companyWebsite,
+      skills,
+      location,
+      salary,
+      type,
+      experienceLevel,
+      category
+    } = req.body;
+    
+    // Update fields (only update fields that are provided)
+    const updateData = {};
+    
+    if (title !== undefined) updateData.title = title;
+    if (company !== undefined) updateData.company = company;
+    if (description !== undefined) updateData.description = description;
+    if (requirements !== undefined) updateData.requirements = requirements;
+    if (companyWebsite !== undefined) updateData.companyWebsite = companyWebsite;
+    if (skills !== undefined) updateData.skills = skills;
+    if (location !== undefined) updateData.location = location;
+    if (salary !== undefined) updateData.salary = salary;
+    if (type !== undefined) updateData.type = type;
+    if (experienceLevel !== undefined) updateData.experienceLevel = experienceLevel;
+    if (category !== undefined) updateData.category = category;
+    
+    // Update the job
+    const updatedJob = await Job.findByIdAndUpdate(
+      id,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+    
+    console.log('✅ Job updated successfully:', updatedJob.title);
+    res.json({ 
+      success: true, 
+      message: 'Job updated successfully', 
+      job: updatedJob 
+    });
+  } catch (error) {
+    console.error('❌ Error updating job:', error);
+    res.status(500).json({ success: false, message: 'Error updating job: ' + error.message });
+  }
+});
+
+// Delete job by ID (recruiter only - must be job owner)
+router.delete('/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log('🗑️ Deleting job with ID:', id);
+    
+    // Check if ID is a valid MongoDB ObjectId format
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ success: false, message: 'Invalid job ID format' });
+    }
+    
+    // Find the job first
+    const job = await Job.findById(id);
+    if (!job) {
+      return res.status(404).json({ success: false, message: 'Job not found' });
+    }
+    
+    // Check if the user is the owner of the job
+    if (job.postedBy !== req.user.email) {
+      return res.status(403).json({ 
+        success: false, 
+        message: 'Access denied. You can only delete jobs you posted.' 
+      });
+    }
+    
+    // Delete the job
+    await Job.findByIdAndDelete(id);
+    
+    console.log('✅ Job deleted successfully:', job.title);
+    res.json({ 
+      success: true, 
+      message: 'Job deleted successfully' 
+    });
+  } catch (error) {
+    console.error('❌ Error deleting job:', error);
+    res.status(500).json({ success: false, message: 'Error deleting job: ' + error.message });
   }
 });
 

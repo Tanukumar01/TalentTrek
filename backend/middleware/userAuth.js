@@ -14,7 +14,7 @@ const authenticateUser = async (req, res, next) => {
     
     // Find user and attach to request
     const user = await User.findById(decoded.id);
-    if (!user) {
+    if (!user) {  
       return res.status(401).json({ success: false, message: 'Invalid token. User not found.' });
     }
 

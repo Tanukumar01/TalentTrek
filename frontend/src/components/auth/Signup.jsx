@@ -160,6 +160,36 @@ const Signup = () => {
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">I am a</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, role: 'jobseeker' })}
+                  className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
+                    formData.role === 'jobseeker'
+                      ? 'border-blue-500 bg-blue-50 text-blue-600'
+                      : 'border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <IoBriefcaseOutline className="text-base" />
+                  <span>Job Seeker</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, role: 'recruiter' })}
+                  className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
+                    formData.role === 'recruiter'
+                      ? 'border-blue-500 bg-blue-50 text-blue-600'
+                      : 'border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <IoPeopleOutline className="text-base" />
+                  <span>Recruiter</span>
+                </button>
+              </div>
+            </div>
+
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
               <div className="relative">
                 <IoLockClosedOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />

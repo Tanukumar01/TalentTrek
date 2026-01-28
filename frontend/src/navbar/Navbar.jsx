@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { 
-  IoBriefcaseOutline, 
-  IoPersonOutline, 
-  IoLogOutOutline, 
+import { Link } from 'react-router-dom';
+import {
+  IoBriefcaseOutline,
+  IoPersonOutline,
+  IoLogOutOutline,
   IoChevronDownOutline,
   IoPeopleOutline,
   IoStatsChartOutline,
@@ -16,7 +16,7 @@ import './Navbar.css';
 const Navbar = ({ isSimplified = false }) => {
   const { user, logout, isAuthenticated } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
-  const navigate = useNavigate();
+
 
   const handleLogout = () => {
     logout();
@@ -25,7 +25,7 @@ const Navbar = ({ isSimplified = false }) => {
 
   return (
     <nav className={`navbar ${isSimplified ? 'navbar-simplified' : ''}`}>
-       
+
       <div className="navbar-left">
         <Link to="/" className="navbar-brand">
           <IoBriefcaseOutline className="navbar-logo" />
@@ -69,7 +69,7 @@ const Navbar = ({ isSimplified = false }) => {
         </div>
       )}
 
-       
+
       <div className="navbar-right">
         {isAuthenticated ? (
           <div className="navbar-right-authenticated">
@@ -83,9 +83,9 @@ const Navbar = ({ isSimplified = false }) => {
                 </button>
               </>
             )}
-            
+
             <div className="user-menu">
-              <button 
+              <button
                 className="user-button"
                 onClick={() => setShowDropdown(!showDropdown)}
               >
@@ -93,7 +93,7 @@ const Navbar = ({ isSimplified = false }) => {
                 <span className="user-name">{user?.name || 'User'}</span>
                 <IoChevronDownOutline className="dropdown-icon" />
               </button>
-              
+
               {showDropdown && (
                 <div className="user-dropdown">
                   <div className="dropdown-header">

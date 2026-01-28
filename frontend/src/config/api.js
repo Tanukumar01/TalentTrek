@@ -2,7 +2,7 @@
 // Use local server for development, remote server for production
 export const API_BASE_URL = import.meta.env.DEV 
   ? 'http://localhost:5000' 
-  : 'https://talenttrek-backend-89nq.onrender.com';
+  : 'https://talenttrek-api.vercel.app';
 
 // API Endpoints
 export const API_ENDPOINTS = {
@@ -52,7 +52,6 @@ export const API_ENDPOINTS = {
   JOB_RECOMMENDATIONS: `${API_BASE_URL}/api/job-recommendations`,
   
   // Utilities
-  SEED_JOBS: `${API_BASE_URL}/api/jobs/seed`,
   HEALTH_CHECK: `${API_BASE_URL}/api/health`,
 };
 

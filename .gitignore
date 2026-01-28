@@ -118,4 +118,7 @@ uploads/
 
 # Build outputs
 landing-page/dist/
-landing-page/build/ 
+landing-page/build/
+
+# Documentation (exclude from git)
+docs/

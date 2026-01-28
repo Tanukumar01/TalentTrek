@@ -1,7 +1,7 @@
 const express = require('express');
 const { User } = require('../models');
 const authenticateToken = require('../middleware/auth');
-const { profileUpload, logoUpload } = require('../config/multer');
+const { profileUpload, logoUpload } = require('../config/cloudinary');
 const router = express.Router();
 
 // Get user profile
@@ -62,10 +62,13 @@ router.post('/picture', authenticateToken, profileUpload.single('profilePicture'
       return res.status(400).json({ success: false, message: 'No profile picture uploaded' });
     }
 
+    // Cloudinary automatically uploads and returns the URL
+    const profilePictureUrl = req.file.path; // Cloudinary URL
+
     const user = await User.findByIdAndUpdate(
       req.user.id,
       { 
-        'profile.profilePicture': req.file.path,
+        'profile.profilePicture': profilePictureUrl,
         updatedAt: new Date()
       },
       { new: true }
@@ -74,7 +77,7 @@ router.post('/picture', authenticateToken, profileUpload.single('profilePicture'
     res.json({ 
       success: true, 
       message: 'Profile picture updated successfully',
-      profilePicture: req.file.path,
+      profilePicture: profilePictureUrl,
       user 
     });
   } catch (error) {
@@ -188,10 +191,13 @@ router.post('/company-logo', authenticateToken, logoUpload.single('companyLogo')
       return res.status(400).json({ success: false, message: 'No company logo uploaded' });
     }
 
+    // Cloudinary automatically uploads and returns the URL
+    const companyLogoUrl = req.file.path; // Cloudinary URL
+
     const user = await User.findByIdAndUpdate(
       req.user.id,
       { 
-        'profile.recruiterProfile.companyLogo': req.file.path,
+        'profile.recruiterProfile.companyLogo': companyLogoUrl,
         updatedAt: new Date()
       },
       { new: true }
@@ -200,7 +206,7 @@ router.post('/company-logo', authenticateToken, logoUpload.single('companyLogo')
     res.json({ 
       success: true, 
       message: 'Company logo updated successfully',
-      companyLogo: req.file.path,
+      companyLogo: companyLogoUrl,
       user 
     });
   } catch (error) {

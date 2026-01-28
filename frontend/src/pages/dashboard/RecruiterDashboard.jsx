@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { API_BASE_URL, API_ENDPOINTS } from '../../config/api';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-  IoBriefcaseOutline, 
-  IoPeopleOutline, 
+import {
+  IoBriefcaseOutline,
+  IoPeopleOutline,
   IoStatsChartOutline,
   IoDocumentTextOutline,
   IoEyeOutline,
@@ -26,12 +26,7 @@ import {
   IoHomeOutline
 } from 'react-icons/io5';
 
-const experienceFilterOptions = [
-  { label: 'All', value: 'all' },
-  { label: 'Freshers', value: 'freshers' },
-  { label: '0-2 years', value: '0-2' },
-  { label: 'Above 2 years', value: '2plus' },
-];
+
 
 const RecruiterDashboard = () => {
   const { user, logout } = useAuth();
@@ -39,9 +34,7 @@ const RecruiterDashboard = () => {
   const [jobs, setJobs] = useState([]);
   const [selectedJobId, setSelectedJobId] = useState('');
   const [applications, setApplications] = useState([]);
-  const [filter, setFilter] = useState('all');
-  const [loadingJobs, setLoadingJobs] = useState(true);
-  const [loadingApps, setLoadingApps] = useState(false);
+  const [filter] = useState('all');
   const [error, setError] = useState('');
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
@@ -62,7 +55,6 @@ const RecruiterDashboard = () => {
   // Fetch jobs posted by recruiter
   useEffect(() => {
     const fetchJobs = async () => {
-      setLoadingJobs(true);
       setError('');
       try {
         const token = localStorage.getItem('token');
@@ -78,10 +70,8 @@ const RecruiterDashboard = () => {
         } else {
           setError(data.message || 'Failed to fetch jobs');
         }
-      } catch (err) {
+      } catch {
         setError('Failed to fetch jobs');
-      } finally {
-        setLoadingJobs(false);
       }
     };
     fetchJobs();
@@ -91,7 +81,6 @@ const RecruiterDashboard = () => {
   useEffect(() => {
     if (!selectedJobId) return;
     const fetchApplications = async () => {
-      setLoadingApps(true);
       setError('');
       try {
         const token = localStorage.getItem('token');
@@ -104,10 +93,8 @@ const RecruiterDashboard = () => {
         } else {
           setError(data.message || 'Failed to fetch applications');
         }
-      } catch (err) {
+      } catch {
         setError('Failed to fetch applications');
-      } finally {
-        setLoadingApps(false);
       }
     };
     fetchApplications();
@@ -119,7 +106,7 @@ const RecruiterDashboard = () => {
       // Try to extract experience from various possible formats
       let exp = 0;
       const experience = app.userId?.profile?.experience;
-      
+
       if (Array.isArray(experience) && experience.length > 0) {
         // If it's an array, try to parse the first element
         const firstExp = experience[0];
@@ -136,7 +123,7 @@ const RecruiterDashboard = () => {
       } else if (typeof experience === 'number') {
         exp = experience;
       }
-      
+
       switch (filter) {
         case 'freshers':
           return exp === 0;
@@ -152,9 +139,7 @@ const RecruiterDashboard = () => {
 
   // Calculate stats
   const totalApplications = applications.length;
-  const filteredApplications = getFilteredApplications();
   const totalJobs = jobs.length;
-  const selectedJob = jobs.find(job => job._id === selectedJobId);
 
   // Real dashboard stats based on actual data
   const dashboardStats = {
@@ -181,29 +166,29 @@ const RecruiterDashboard = () => {
     const hiredApps = applications.filter(app => app.status === 'hired');
 
     return [
-      { 
-        stage: 'Applied', 
-        count: appliedApps.length, 
+      {
+        stage: 'Applied',
+        count: appliedApps.length,
         candidates: appliedApps.slice(0, 3).map(app => app.userId?.name || app.applicantName || 'Unknown')
       },
-      { 
-        stage: 'Screening', 
-        count: screeningApps.length, 
+      {
+        stage: 'Screening',
+        count: screeningApps.length,
         candidates: screeningApps.slice(0, 3).map(app => app.userId?.name || app.applicantName || 'Unknown')
       },
-      { 
-        stage: 'Interview', 
-        count: interviewApps.length, 
+      {
+        stage: 'Interview',
+        count: interviewApps.length,
         candidates: interviewApps.slice(0, 3).map(app => app.userId?.name || app.applicantName || 'Unknown')
       },
-      { 
-        stage: 'Offer', 
-        count: offerApps.length, 
+      {
+        stage: 'Offer',
+        count: offerApps.length,
         candidates: offerApps.slice(0, 3).map(app => app.userId?.name || app.applicantName || 'Unknown')
       },
-      { 
-        stage: 'Hired', 
-        count: hiredApps.length, 
+      {
+        stage: 'Hired',
+        count: hiredApps.length,
         candidates: hiredApps.slice(0, 3).map(app => app.userId?.name || app.applicantName || 'Unknown')
       }
     ];
@@ -249,7 +234,7 @@ const RecruiterDashboard = () => {
             {/* Right Section */}
             <div className="flex items-center gap-4">
               {/* New Job Button */}
-              <Link 
+              <Link
                 to="/post-job"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
               >
@@ -269,7 +254,7 @@ const RecruiterDashboard = () => {
                   <p className="text-sm font-medium text-gray-900">{user?.name || 'Recruiter'}</p>
                   <p className="text-xs text-gray-500">Recruiter</p>
                 </div>
-                <button 
+                <button
                   onClick={() => setShowProfileDropdown(!showProfileDropdown)}
                   className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center hover:bg-blue-200 transition-colors"
                   title="Profile Options"
@@ -354,7 +339,7 @@ const RecruiterDashboard = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
@@ -376,7 +361,7 @@ const RecruiterDashboard = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
@@ -419,7 +404,7 @@ const RecruiterDashboard = () => {
               <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Live</span>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex items-start gap-4">
               <div className="bg-green-100 p-2 rounded-lg">
@@ -431,7 +416,7 @@ const RecruiterDashboard = () => {
                 <button className="text-blue-600 text-sm font-medium mt-2 hover:text-blue-800">Review Now</button>
               </div>
             </div>
-            
+
             <div className="flex items-start gap-4">
               <div className="bg-yellow-100 p-2 rounded-lg">
                 <IoTrendingUpOutline className="text-yellow-600" />
@@ -442,7 +427,7 @@ const RecruiterDashboard = () => {
                 <button className="text-blue-600 text-sm font-medium mt-2 hover:text-blue-800">Optimize</button>
               </div>
             </div>
-            
+
             <div className="flex items-start gap-4">
               <div className="bg-orange-100 p-2 rounded-lg">
                 <IoPersonOutline className="text-orange-600" />
@@ -453,7 +438,7 @@ const RecruiterDashboard = () => {
                 <button className="text-blue-600 text-sm font-medium mt-2 hover:text-blue-800">Manage</button>
               </div>
             </div>
-            
+
             <div className="flex items-start gap-4">
               <div className="bg-blue-100 p-2 rounded-lg">
                 <IoDocumentTextOutline className="text-blue-600" />
@@ -482,14 +467,14 @@ const RecruiterDashboard = () => {
                   </button>
                 </div>
               </div>
-              
+
               <div className="p-6">
                 {totalApplications === 0 ? (
                   <div className="text-center py-12">
                     <IoPeopleOutline className="text-6xl text-gray-300 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No Candidates Yet</h3>
                     <p className="text-gray-600 mb-6">Start by posting a job to attract candidates to your pipeline.</p>
-                    <Link 
+                    <Link
                       to="/post-job"
                       className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center gap-2"
                     >
@@ -502,13 +487,12 @@ const RecruiterDashboard = () => {
                     <div className="flex justify-between items-center mb-6">
                       {candidatePipeline.map((stage, index) => (
                         <div key={stage.stage} className="flex flex-col items-center">
-                          <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold mb-2 ${
-                            stage.stage === 'Applied' ? 'bg-blue-500' :
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold mb-2 ${stage.stage === 'Applied' ? 'bg-blue-500' :
                             stage.stage === 'Screening' ? 'bg-yellow-500' :
-                            stage.stage === 'Interview' ? 'bg-purple-500' :
-                            stage.stage === 'Offer' ? 'bg-orange-500' :
-                            'bg-green-500'
-                          }`}>
+                              stage.stage === 'Interview' ? 'bg-purple-500' :
+                                stage.stage === 'Offer' ? 'bg-orange-500' :
+                                  'bg-green-500'
+                            }`}>
                             {stage.count}
                           </div>
                           <span className="text-sm font-medium text-gray-700">{stage.stage}</span>
@@ -518,7 +502,7 @@ const RecruiterDashboard = () => {
                         </div>
                       ))}
                     </div>
-                    
+
                     {/* Pipeline Details */}
                     <div className="grid grid-cols-5 gap-4">
                       {candidatePipeline.map((stage) => (
@@ -561,14 +545,14 @@ const RecruiterDashboard = () => {
                   </Link>
                 </div>
               </div>
-              
+
               <div className="p-6">
                 {totalJobs === 0 ? (
                   <div className="text-center py-12">
                     <IoBriefcaseOutline className="text-6xl text-gray-300 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No Job Postings Yet</h3>
                     <p className="text-gray-600 mb-6">Create your first job posting to start recruiting candidates.</p>
-                    <Link 
+                    <Link
                       to="/post-job"
                       className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center gap-2"
                     >
@@ -579,51 +563,51 @@ const RecruiterDashboard = () => {
                 ) : (
                   <div className="divide-y divide-gray-200">
                     {jobs.map((job) => (
-                  <div key={job._id} className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <h4 className="font-semibold text-gray-900">{job.title}</h4>
-                        <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
-                          <span>{job.company} • {typeof job.location === 'object' ? `${job.location.city}, ${job.location.country}` : job.location}</span>
+                      <div key={job._id} className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div>
+                            <h4 className="font-semibold text-gray-900">{job.title}</h4>
+                            <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
+                              <span>{job.company} • {typeof job.location === 'object' ? `${job.location.city}, ${job.location.country}` : job.location}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <IoEyeOutline className="text-gray-400" />
+                            <button className="text-gray-400 hover:text-gray-600">
+                              <IoSettingsOutline />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <span className="text-sm text-gray-600">
+                              👥 {applications.filter(app => app.jobId === job._id).length} candidates
+                            </span>
+                            <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
+                              🤖 AI matched
+                            </span>
+                          </div>
+                          <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                            Active
+                          </span>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="mt-4">
+                          <div className="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>Applications</span>
+                            <span>{applications.filter(app => app.jobId === job._id).length}</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full"
+                              style={{ width: `${Math.min((applications.filter(app => app.jobId === job._id).length / 10) * 100, 100)}%` }}
+                            ></div>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <IoEyeOutline className="text-gray-400" />
-                        <button className="text-gray-400 hover:text-gray-600">
-                          <IoSettingsOutline />
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <span className="text-sm text-gray-600">
-                          👥 {applications.filter(app => app.jobId === job._id).length} candidates
-                        </span>
-                        <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
-                          🤖 AI matched
-                        </span>
-                      </div>
-                      <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                        Active
-                      </span>
-                    </div>
-                    
-                      {/* Progress Bar */}
-                      <div className="mt-4">
-                        <div className="flex justify-between text-sm text-gray-600 mb-1">
-                          <span>Applications</span>
-                          <span>{applications.filter(app => app.jobId === job._id).length}</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-blue-600 h-2 rounded-full" 
-                            style={{ width: `${Math.min((applications.filter(app => app.jobId === job._id).length / 10) * 100, 100)}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                   </div>
                 )}
               </div>
@@ -641,7 +625,7 @@ const RecruiterDashboard = () => {
                   </span>
                 </div>
               </div>
-              
+
               <div className="p-6">
                 {dashboardStats.interviewsScheduled === 0 ? (
                   <div className="text-center py-12">
@@ -652,40 +636,40 @@ const RecruiterDashboard = () => {
                 ) : (
                   <div className="divide-y divide-gray-200">
                     {upcomingInterviews.map((interview) => (
-                  <div key={interview.id} className="p-6">
-                    <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span className="text-blue-600 font-medium text-sm">
-                          {interview.candidateName.split(' ').map(n => n[0]).join('')}
-                        </span>
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900">{interview.candidateName}</h4>
-                        <p className="text-sm text-gray-600">{interview.position}</p>
-                        <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
-                          <IoCalendarOutline className="text-xs" />
-                          <span>{interview.time}</span>
+                      <div key={interview.id} className="p-6">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span className="text-blue-600 font-medium text-sm">
+                              {interview.candidateName.split(' ').map(n => n[0]).join('')}
+                            </span>
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-medium text-gray-900">{interview.candidateName}</h4>
+                            <p className="text-sm text-gray-600">{interview.position}</p>
+                            <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
+                              <IoCalendarOutline className="text-xs" />
+                              <span>{interview.time}</span>
+                            </div>
+                            <div className="flex items-center gap-2 mt-1 text-sm">
+                              {interview.type === 'Video Call' ? (
+                                <>
+                                  <IoVideocamOutline className="text-blue-500 text-xs" />
+                                  <span className="text-blue-600">Video Call</span>
+                                </>
+                              ) : (
+                                <>
+                                  <IoPersonOutline className="text-green-500 text-xs" />
+                                  <span className="text-green-600">In Person</span>
+                                </>
+                              )}
+                              <span className="text-gray-500">with {interview.interviewer}</span>
+                            </div>
+                          </div>
+                          <button className="text-gray-400 hover:text-gray-600">
+                            <IoSettingsOutline />
+                          </button>
                         </div>
-                        <div className="flex items-center gap-2 mt-1 text-sm">
-                          {interview.type === 'Video Call' ? (
-                            <>
-                              <IoVideocamOutline className="text-blue-500 text-xs" />
-                              <span className="text-blue-600">Video Call</span>
-                            </>
-                          ) : (
-                            <>
-                              <IoPersonOutline className="text-green-500 text-xs" />
-                              <span className="text-green-600">In Person</span>
-                            </>
-                          )}
-                          <span className="text-gray-500">with {interview.interviewer}</span>
-                        </div>
                       </div>
-                      <button className="text-gray-400 hover:text-gray-600">
-                        <IoSettingsOutline />
-                      </button>
-                    </div>
-                  </div>
                     ))}
                   </div>
                 )}
