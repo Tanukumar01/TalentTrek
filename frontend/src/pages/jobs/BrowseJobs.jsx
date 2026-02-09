@@ -40,14 +40,14 @@ const BrowseJobs = () => {
       console.log('Fetching jobs from:', API_ENDPOINTS.JOBS);
       const response = await fetch(API_ENDPOINTS.JOBS);
       console.log('Response status:', response.status);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
       console.log('Jobs data received:', data);
-      
+
       if (data.success && Array.isArray(data.jobs)) {
         setJobs(data.jobs);
         console.log('Jobs set successfully:', data.jobs.length, 'jobs');
@@ -95,7 +95,7 @@ const BrowseJobs = () => {
     try {
       const response = await makeAuthenticatedRequest(API_ENDPOINTS.JOB_RECOMMENDATIONS);
       const data = await response.json();
-      
+
       if (data.success && data.recommendations.length > 0) {
         console.log('Backend recommendations received:', data.recommendations);
         return data.recommendations.slice(0, 6);
@@ -109,7 +109,7 @@ const BrowseJobs = () => {
   const generateRecommendations = async (resumeFile) => {
     // Try backend recommendations first
     const backendRecommendations = await getBackendRecommendations();
-    
+
     if (backendRecommendations) {
       setRecommendedJobs(backendRecommendations);
       setShowRecommendations(true);
@@ -122,19 +122,19 @@ const BrowseJobs = () => {
     let recommendedJobsData = [];
 
     if (fileName.includes('developer') || fileName.includes('engineer') || fileName.includes('tech')) {
-      recommendedJobsData = jobs.filter(job => 
-        job.title.toLowerCase().includes('developer') || 
+      recommendedJobsData = jobs.filter(job =>
+        job.title.toLowerCase().includes('developer') ||
         job.title.toLowerCase().includes('engineer') ||
         job.title.toLowerCase().includes('software')
       ).slice(0, 6);
     } else if (fileName.includes('marketing') || fileName.includes('sales')) {
-      recommendedJobsData = jobs.filter(job => 
-        job.title.toLowerCase().includes('marketing') || 
+      recommendedJobsData = jobs.filter(job =>
+        job.title.toLowerCase().includes('marketing') ||
         job.title.toLowerCase().includes('sales')
       ).slice(0, 6);
     } else if (fileName.includes('design') || fileName.includes('ui') || fileName.includes('ux')) {
-      recommendedJobsData = jobs.filter(job => 
-        job.title.toLowerCase().includes('design') || 
+      recommendedJobsData = jobs.filter(job =>
+        job.title.toLowerCase().includes('design') ||
         job.title.toLowerCase().includes('ui') ||
         job.title.toLowerCase().includes('ux')
       ).slice(0, 6);
@@ -208,19 +208,19 @@ const BrowseJobs = () => {
   const filteredJobs = jobs.filter(job => {
     try {
       const matchesSearch = (job.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           (job.company || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           (job.description || '').toLowerCase().includes(searchTerm.toLowerCase());
-      
+        (job.company || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (job.description || '').toLowerCase().includes(searchTerm.toLowerCase());
+
       // Handle location as object or string
-      const locationString = typeof job.location === 'object' 
+      const locationString = typeof job.location === 'object'
         ? `${job.location?.city || ''} ${job.location?.country || ''}`.trim()
         : (job.location || '');
       const matchesLocation = !locationFilter || locationString.toLowerCase().includes(locationFilter.toLowerCase());
-      
+
       // Handle job type safely
       const jobType = Array.isArray(job.type) ? job.type.join(' ') : (job.type || '');
       const matchesType = !typeFilter || jobType.toLowerCase().includes(typeFilter.toLowerCase());
-      
+
       return matchesSearch && matchesLocation && matchesType;
     } catch (error) {
       console.error('Error filtering job:', job, error);
@@ -230,11 +230,11 @@ const BrowseJobs = () => {
 
   if (loading) {
     return (
-      <div style={{ 
-        display: 'flex', 
+      <div style={{
+        display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center', 
-        alignItems: 'center', 
+        justifyContent: 'center',
+        alignItems: 'center',
         height: '50vh',
         fontSize: '1.2rem',
         color: '#6b7280'
@@ -247,11 +247,11 @@ const BrowseJobs = () => {
 
   if (error) {
     return (
-      <div style={{ 
-        display: 'flex', 
+      <div style={{
+        display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center', 
-        alignItems: 'center', 
+        justifyContent: 'center',
+        alignItems: 'center',
         height: '50vh',
         fontSize: '1.2rem',
         color: '#ef4444',
@@ -262,7 +262,7 @@ const BrowseJobs = () => {
         <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
           API Endpoint: {API_ENDPOINTS.JOBS}
         </div>
-        <button 
+        <button
           onClick={() => {
             setError(null);
             setLoading(true);
@@ -386,10 +386,10 @@ const BrowseJobs = () => {
       </div>
 
       {/* Search and Filter Section */}
-      <div style={{ 
-        backgroundColor: '#f8fafc', 
-        padding: '1.5rem', 
-        borderRadius: '8px', 
+      <div style={{
+        backgroundColor: '#f8fafc',
+        padding: '1.5rem',
+        borderRadius: '8px',
         marginBottom: '2rem',
         display: 'flex',
         gap: '1rem',
@@ -434,7 +434,7 @@ const BrowseJobs = () => {
         </div>
         <div>
           // addding slider for selection range of salary
-          
+
         </div>
         <div style={{ minWidth: '150px' }}>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#374151' }}>
@@ -464,10 +464,10 @@ const BrowseJobs = () => {
       {/* Recommended Jobs Section */}
       {showRecommendations && recommendedJobs.length > 0 && (
         <div style={{ marginBottom: '3rem' }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '0.5rem', 
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
             marginBottom: '1.5rem',
             padding: '1rem',
             backgroundColor: '#ecfdf5',
@@ -479,10 +479,10 @@ const BrowseJobs = () => {
               Recommended Jobs Based on Your Resume
             </h2>
           </div>
-          
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', 
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
             gap: '1.5rem',
             marginBottom: '2rem'
           }}>
@@ -506,37 +506,37 @@ const BrowseJobs = () => {
                   fontSize: '0.75rem',
                   fontWeight: '600'
                 }}>
-                  {job.matchPercentage ? `${job.matchPercentage}% MATCH` : 'RECOMMENDED'}
+                  RECOMMENDED
                 </div>
-                
+
                 <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
-                  <h3 style={{ 
-                    fontSize: '1.25rem', 
-                    fontWeight: '600', 
+                  <h3 style={{
+                    fontSize: '1.25rem',
+                    fontWeight: '600',
                     color: '#1f2937',
                     marginBottom: '0.5rem'
                   }}>
                     {job.title}
                   </h3>
-                  <p style={{ 
-                    fontSize: '1rem', 
+                  <p style={{
+                    fontSize: '1rem',
                     color: '#6b7280',
                     marginBottom: '0.5rem'
                   }}>
                     {job.company}
                   </p>
                 </div>
-                
-                <div style={{ 
-                  display: 'flex', 
-                  flexDirection: 'column', 
+
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
                   gap: '0.5rem',
                   marginBottom: '1rem'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6b7280' }}>
                     <IoLocationOutline />
                     <span>
-                      {typeof job.location === 'object' 
+                      {typeof job.location === 'object'
                         ? `${job.location.city || ''}, ${job.location.country || ''}`.replace(/^,\s*|,\s*$/g, '')
                         : job.location || 'Location not specified'
                       }
@@ -558,7 +558,7 @@ const BrowseJobs = () => {
                 </div>
 
                 <div style={{ marginBottom: '1rem' }}>
-                  <p style={{ 
+                  <p style={{
                     color: '#374151',
                     lineHeight: '1.5',
                     display: '-webkit-box',
@@ -599,14 +599,14 @@ const BrowseJobs = () => {
                   </div>
                 )}
 
-                <button 
+                <button
                   onClick={() => handleApplyToJob(job._id)}
                   disabled={applyingJobs.has(job._id) || appliedJobs.has(job._id)}
                   style={{
                     width: '100%',
                     padding: '0.75rem',
-                    backgroundColor: appliedJobs.has(job._id) ? '#6b7280' : 
-                                   applyingJobs.has(job._id) ? '#9ca3af' : '#10b981',
+                    backgroundColor: appliedJobs.has(job._id) ? '#6b7280' :
+                      applyingJobs.has(job._id) ? '#9ca3af' : '#10b981',
                     color: 'white',
                     border: 'none',
                     borderRadius: '6px',
@@ -627,8 +627,8 @@ const BrowseJobs = () => {
                     }
                   }}
                 >
-                  {appliedJobs.has(job._id) ? '✓ Applied' : 
-                   applyingJobs.has(job._id) ? 'Applying...' : 'Apply Now'}
+                  {appliedJobs.has(job._id) ? '✓ Applied' :
+                    applyingJobs.has(job._id) ? 'Applying...' : 'Apply Now'}
                 </button>
               </div>
             ))}
@@ -644,15 +644,15 @@ const BrowseJobs = () => {
       </div>
 
       {/* Jobs Grid */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', 
-        gap: '1.5rem' 
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+        gap: '1.5rem'
       }}>
         {filteredJobs.length === 0 ? (
-          <div style={{ 
-            gridColumn: '1 / -1', 
-            textAlign: 'center', 
+          <div style={{
+            gridColumn: '1 / -1',
+            textAlign: 'center',
             padding: '3rem',
             color: '#6b7280'
           }}>
@@ -671,37 +671,37 @@ const BrowseJobs = () => {
               transition: 'box-shadow 0.2s',
               cursor: 'pointer'
             }}
-            onMouseEnter={(e) => e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'}
-            onMouseLeave={(e) => e.target.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)'}
+              onMouseEnter={(e) => e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'}
+              onMouseLeave={(e) => e.target.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)'}
             >
               <div style={{ marginBottom: '1rem' }}>
-                <h3 style={{ 
-                  fontSize: '1.25rem', 
-                  fontWeight: '600', 
+                <h3 style={{
+                  fontSize: '1.25rem',
+                  fontWeight: '600',
                   color: '#1f2937',
                   marginBottom: '0.5rem'
                 }}>
                   {job.title}
                 </h3>
-                <p style={{ 
-                  fontSize: '1rem', 
+                <p style={{
+                  fontSize: '1rem',
                   color: '#6b7280',
                   marginBottom: '0.5rem'
                 }}>
                   {job.company}
                 </p>
               </div>
-              
-              <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
+
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
                 gap: '0.5rem',
                 marginBottom: '1rem'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6b7280' }}>
                   <IoLocationOutline />
                   <span>
-                    {typeof job.location === 'object' 
+                    {typeof job.location === 'object'
                       ? `${job.location.city || ''}, ${job.location.country || ''}`.replace(/^,\s*|,\s*$/g, '')
                       : job.location || 'Location not specified'
                     }
@@ -723,7 +723,7 @@ const BrowseJobs = () => {
               </div>
 
               <div style={{ marginBottom: '1rem' }}>
-                <p style={{ 
+                <p style={{
                   color: '#374151',
                   lineHeight: '1.5',
                   display: '-webkit-box',
@@ -764,14 +764,14 @@ const BrowseJobs = () => {
                 </div>
               )}
 
-              <button 
+              <button
                 onClick={() => handleApplyToJob(job._id)}
                 disabled={applyingJobs.has(job._id) || appliedJobs.has(job._id)}
                 style={{
                   width: '100%',
                   padding: '0.75rem',
-                  backgroundColor: appliedJobs.has(job._id) ? '#6b7280' : 
-                                 applyingJobs.has(job._id) ? '#9ca3af' : '#3b82f6',
+                  backgroundColor: appliedJobs.has(job._id) ? '#6b7280' :
+                    applyingJobs.has(job._id) ? '#9ca3af' : '#3b82f6',
                   color: 'white',
                   border: 'none',
                   borderRadius: '6px',
@@ -792,8 +792,8 @@ const BrowseJobs = () => {
                   }
                 }}
               >
-                {appliedJobs.has(job._id) ? '✓ Applied' : 
-                 applyingJobs.has(job._id) ? 'Applying...' : 'Apply Now'}
+                {appliedJobs.has(job._id) ? '✓ Applied' :
+                  applyingJobs.has(job._id) ? 'Applying...' : 'Apply Now'}
               </button>
             </div>
           ))
