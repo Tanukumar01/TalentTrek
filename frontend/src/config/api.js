@@ -1,8 +1,10 @@
 // API Configuration
-// Use local server for development, remote server for production
-export const API_BASE_URL = import.meta.env.DEV 
-  ? 'http://localhost:5000' 
-  : 'https://talenttrek-api.vercel.app';
+// In development: use empty string for Vite proxy (avoids CORS)
+// In production: use full Vercel URL
+const isDevelopment = import.meta.env.DEV;
+export const API_BASE_URL = isDevelopment 
+  ? '' // Empty string uses Vite proxy in development
+  : (import.meta.env.VITE_API_BASE_URL || 'https://talenttrek-api.vercel.app');
 
 // API Endpoints
 export const API_ENDPOINTS = {

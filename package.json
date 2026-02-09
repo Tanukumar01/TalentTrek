@@ -5,7 +5,13 @@
   "main": "seed-jobs.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:all": "concurrently \"npm run start --prefix backend\" \"npm run dev --prefix frontend\""
+    "dev": "npm run dev --prefix frontend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:all": "concurrently \"npm run start --prefix backend\" \"npm run dev --prefix frontend\"",
+    "start": "concurrently \"npm run start --prefix backend\" \"npm run dev --prefix frontend\"",
+    "start:all": "concurrently \"npm run start --prefix backend\" \"npm run dev --prefix frontend\"",
+    "frontend": "npm run dev --prefix frontend",
+    "backend": "npm run start --prefix backend"
   },
   "repository": {
     "type": "git",
