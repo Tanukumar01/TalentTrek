@@ -24,6 +24,6 @@
         }
     ],
     "env": {
-        "VITE_API_URL": "@vite_api_url"
+        "VITE_API_BASE_URL": "https://talenttrek-api.vercel.app"
     }
 }
