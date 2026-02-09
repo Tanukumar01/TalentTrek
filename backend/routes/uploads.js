@@ -2,7 +2,6 @@ const express = require('express');
 const { User, Resume } = require('../models');
 const authenticateToken = require('../middleware/auth');
 const { resumeUpload } = require('../config/cloudinary');
-const { calculateMatchScore } = require('../utils/helpers');
 const router = express.Router();
 
 // Resume upload route

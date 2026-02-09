@@ -35,17 +35,17 @@ router.put('/profile', authenticateUser, async (req, res) => {
     if (req.user.role === 'jobseeker') {
       const profile = updates.profile;
       if (profile && profile.jobSeekerProfile) {
-        console.log('✅ Job seeker profile data found:', profile.jobSeekerProfile);
+        console.log(' Job seeker profile data found:', profile.jobSeekerProfile);
         
         // Ensure arrays are properly formatted
         if (profile.jobSeekerProfile.experience) {
-          console.log('📝 Experience entries:', profile.jobSeekerProfile.experience.length);
+          console.log('Experience entries:', profile.jobSeekerProfile.experience.length);
         }
         if (profile.jobSeekerProfile.education) {
-          console.log('🎓 Education entries:', profile.jobSeekerProfile.education.length);
+          console.log('Education entries:', profile.jobSeekerProfile.education.length);
         }
         if (profile.jobSeekerProfile.skills) {
-          console.log('💪 Skills:', profile.jobSeekerProfile.skills.length);
+          console.log('Skills:', profile.jobSeekerProfile.skills.length);
         }
       }
     }
@@ -60,16 +60,16 @@ router.put('/profile', authenticateUser, async (req, res) => {
     ).select('-password');
     
     if (!user) {
-      console.error('❌ User not found for ID:', req.user.id);
+      console.error(' User not found for ID:', req.user.id);
       return res.status(404).json({ success: false, message: 'User not found' });
     }
     
-    console.log('✅ Profile updated successfully for user:', req.user.id);
-    console.log('💾 Updated profile data:', JSON.stringify(user.profile, null, 2));
+    console.log('Profile updated successfully for user:', req.user.id);
+    console.log('Updated profile data:', JSON.stringify(user.profile, null, 2));
     
     res.json({ success: true, user, message: 'Profile updated successfully' });
   } catch (error) {
-    console.error('❌ Error updating profile:', error);
+    console.error('Error updating profile:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Server error: ' + error.message,

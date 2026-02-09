@@ -1,7 +1,6 @@
 const express = require('express');
 const { User, Job } = require('../models');
 const authenticateToken = require('../middleware/auth');
-const { calculateMatchScore } = require('../utils/helpers');
 const router = express.Router();
 
 // Get job recommendations based on user's resume
@@ -13,27 +12,16 @@ router.get('/', authenticateToken, async (req, res) => {
     }
 
     const userSkills = user.profile?.jobSeekerProfile?.skills || user.profile?.jobSeekerProfile?.parsedResume?.skills || [];
-    const allJobs = await Job.find();
+    
+    // Get all jobs sorted by posted date (newest first)
+    const allJobs = await Job.find().sort({ postedAt: -1 }).limit(10);
 
-    // Calculate job matches based on skills
-    const recommendations = allJobs.map(job => {
-      const matchScore = calculateMatchScore(userSkills, job.skills);
-      return {
-        ...job.toObject(),
-        matchScore,
-        matchPercentage: Math.round(matchScore * 100)
-      };
-    });
-
-    // Sort by match score and return top 10
-    const topRecommendations = recommendations
-      .filter(job => job.matchScore > 0.1) // Only jobs with at least 10% match
-      .sort((a, b) => b.matchScore - a.matchScore)
-      .slice(0, 10);
+    // Convert to plain objects
+    const recommendations = allJobs.map(job => job.toObject());
 
     res.json({ 
       success: true, 
-      recommendations: topRecommendations,
+      recommendations: recommendations,
       userSkills: userSkills
     });
   } catch (error) {

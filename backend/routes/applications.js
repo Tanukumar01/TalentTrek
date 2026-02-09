@@ -55,7 +55,7 @@ router.post('/', authenticateToken, resumeUpload.single('resume'), async (req, r
     
     await application.save();
     
-    console.log('✅ Application submitted:', {
+    console.log(' Application submitted:', {
       jobId,
       userId: req.user.id,
       hasResume: !!resumePath

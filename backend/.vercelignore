@@ -1,0 +1,25 @@
+# Dependencies
+node_modules
+
+# Environment files (will be set in Vercel dashboard)
+.env
+.env.local
+.env.*.local
+
+# Uploads (use Cloudinary instead)
+uploads/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

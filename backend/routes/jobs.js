@@ -2,7 +2,7 @@ const express = require('express');
 const { Job, Application } = require('../models');
 const authenticateToken = require('../middleware/auth');
 const { logoUpload } = require('../config/cloudinary');
-const { extractSkillsFromText, calculateMatchScore } = require('../utils/helpers');
+const { extractSkillsFromText } = require('../utils/helpers');
 const { seedJobs } = require('../utils/seedData');
 const router = express.Router();
 
@@ -90,7 +90,7 @@ router.post('/', authenticateToken, (req, res, next) => {
         ? JSON.parse(bodyCategory)
         : bodyCategory || ['Development'];
     } catch (parseError) {
-      console.error('❌ JSON parsing error:', parseError);
+      console.error('JSON parsing error:', parseError);
       return res.status(400).json({ 
         success: false, 
         message: 'Invalid data format: ' + parseError.message 
@@ -135,10 +135,10 @@ router.post('/', authenticateToken, (req, res, next) => {
     });
     
     await job.save();
-    console.log('✅ Job posted successfully:', job.title);
+    console.log('Job posted successfully:', job.title);
     res.status(201).json({ success: true, message: 'Job posted successfully', job });
   } catch (error) {
-    console.error('❌ Job posting error:', error);
+    console.error('Job posting error:', error);
     res.status(500).json({ success: false, message: 'Error posting job: ' + error.message });
   }
 });
@@ -239,14 +239,14 @@ router.put('/:id', authenticateToken, async (req, res) => {
       { new: true, runValidators: true }
     );
     
-    console.log('✅ Job updated successfully:', updatedJob.title);
+    console.log(' Job updated successfully:', updatedJob.title);
     res.json({ 
       success: true, 
       message: 'Job updated successfully', 
       job: updatedJob 
     });
   } catch (error) {
-    console.error('❌ Error updating job:', error);
+    console.error('Error updating job:', error);
     res.status(500).json({ success: false, message: 'Error updating job: ' + error.message });
   }
 });
@@ -255,7 +255,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
 router.delete('/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
-    console.log('🗑️ Deleting job with ID:', id);
+    console.log(' Deleting job with ID:', id);
     
     // Check if ID is a valid MongoDB ObjectId format
     if (!id.match(/^[0-9a-fA-F]{24}$/)) {
@@ -279,13 +279,13 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     // Delete the job
     await Job.findByIdAndDelete(id);
     
-    console.log('✅ Job deleted successfully:', job.title);
+    console.log(' Job deleted successfully:', job.title);
     res.json({ 
       success: true, 
       message: 'Job deleted successfully' 
     });
   } catch (error) {
-    console.error('❌ Error deleting job:', error);
+    console.error(' Error deleting job:', error);
     res.status(500).json({ success: false, message: 'Error deleting job: ' + error.message });
   }
 });
